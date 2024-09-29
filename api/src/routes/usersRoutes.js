@@ -23,11 +23,83 @@ function escreve(dadosEcrita) {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - email
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID gerado automaticamente para o usuário
+ *         name:
+ *           type: string
+ *           description: Nome do usuário
+ *         email:
+ *           type: string
+ *           description: Email do usuário
+ *       example:
+ *         id: "1a2b3c4d"
+ *         name: "João Silva"
+ *         email: "joao.silva@example.com"
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: API para gerenciamento de usuários
+ */
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retorna a lista de todos os usuários
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: A lista de usuários
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
 router.get('/', (req, res) => {
     loadUsers();
     res.json(usersDB);
 });
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Retorna um usuário pelo ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Usuário encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.get('/:id', (req, res) => {
     loadUsers();
     const id = req.params.id;
@@ -40,6 +112,22 @@ router.get('/:id', (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/adicionar:
+ *   post:
+ *     summary: Adiciona um novo usuário
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: Usuário adicionado com sucesso
+ */
 router.post('/adicionar', (req, res) => {
     loadUsers();
     const user = req.body;
@@ -50,9 +138,34 @@ router.post('/adicionar', (req, res) => {
     };
     usersDB.push(usersComId);
     escreve(usersDB);
-    res.status(201).send('Novo usuários adicionado');
+    res.status(201).send('Novo usuário adicionado');
 });
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Atualiza um usuário pelo ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: Usuário atualizado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.put('/:id', (req, res) => {
     loadUsers();
     const id = req.params.id;
@@ -68,6 +181,25 @@ router.put('/:id', (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Remove um usuário pelo ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Usuário removido com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.delete('/:id', (req, res) => {
     loadUsers();
     const id = req.params.id;
@@ -76,7 +208,7 @@ router.delete('/:id', (req, res) => {
     if (userIndex !== -1) {
         usersDB.splice(userIndex, 1);
         escreve(usersDB);
-        res.status(200).send('Dados removidos com sucesso');
+        res.status(200).send('Usuário removido com sucesso');
     } else {
         res.status(404).send('Usuário não encontrado');
     }
