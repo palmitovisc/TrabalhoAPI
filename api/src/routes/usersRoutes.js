@@ -58,7 +58,7 @@ function escreve(dadosEcrita) {
 
 /**
  * @swagger
- * /users:
+ * /user:
  *   get:
  *     summary: Retorna a lista de todos os usuários
  *     tags: [Users]
@@ -79,7 +79,7 @@ router.get('/', (req, res) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /user/{id}:
  *   get:
  *     summary: Retorna um usuário pelo ID
  *     tags: [Users]
@@ -114,7 +114,7 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
- * /users/adicionar:
+ * /user/adicionar:
  *   post:
  *     summary: Adiciona um novo usuário
  *     tags: [Users]
@@ -143,7 +143,7 @@ router.post('/adicionar', (req, res) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /user/{id}:
  *   put:
  *     summary: Atualiza um usuário pelo ID
  *     tags: [Users]
@@ -183,7 +183,7 @@ router.put('/:id', (req, res) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /user/{id}:
  *   delete:
  *     summary: Remove um usuário pelo ID
  *     tags: [Users]
