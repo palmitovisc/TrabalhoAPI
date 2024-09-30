@@ -82,7 +82,7 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /**
  * @swagger
- * /professionals:
+ * /prof:
  *   get:
  *     summary: Retorna a lista de todos os profissionais
  *     tags: [Professionals]
@@ -107,7 +107,7 @@ router.get('/', (req, res) => {
 
 /**
  * @swagger
- * /professionals/adicionar:
+ * /prof/adicionar:
  *   post:
  *     summary: Adiciona um novo profissional
  *     tags: [Professionals]
@@ -136,7 +136,7 @@ router.post('/adicionar', (req, res) => {
 
 /**
  * @swagger
- * /professionals/{id}:
+ * /prof/{id}:
  *   put:
  *     summary: Atualiza um profissional pelo ID
  *     tags: [Professionals]
@@ -178,7 +178,7 @@ router.put('/:id', (req, res) => {
 
 /**
  * @swagger
- * /professionals/{id}:
+ * /prof/{id}:
  *   delete:
  *     summary: Remove um profissional pelo ID
  *     tags: [Professionals]
