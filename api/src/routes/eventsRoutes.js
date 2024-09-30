@@ -66,7 +66,7 @@ function escreve(dadosEcrita) {
 
 /**
  * @swagger
- * /events:
+ * /event:
  *   get:
  *     summary: Retorna a lista de todos os eventos
  *     tags: [Events]
