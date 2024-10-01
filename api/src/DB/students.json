@@ -1,11 +1,83 @@
 [
     {
-    "id": "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd",
-    "name": "Bingo Heeler",
-    "age": "6",
-    "parents": "Bandit Heeler e Chilli Heeler",
-    "phone_number": "48 9696 5858",
-    "special_needs": "Síndrome de Down",
-    "status": "on"
+        "id": "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd",
+        "name": "Bingo Heeler",
+        "age": "6",
+        "parents": "Bandit Heeler e Chilli Heeler",
+        "phone_number": "48 9696 5858",
+        "special_needs": "Síndrome de Down",
+        "status": "on"
+    },
+    {
+        "id": "eab1234567890abcdef1234567890abcdef1234",
+        "name": "Bluey Heeler",
+        "age": "5",
+        "parents": "Bandit Heeler e Chilli Heeler",
+        "phone_number": "48 9876 5432",
+        "special_needs": "Nenhuma",
+        "status": "on"
+    },
+    {
+        "id": "fbc9876543210abcdef1234567890abcdef5678",
+        "name": "Lucky",
+        "age": "7",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9123 4567",
+        "special_needs": "Alergia alimentar",
+        "status": "on"
+    },
+    {
+        "id": "abc9876543210abcdef1234567890abcdefabcd",
+        "name": "Coco",
+        "age": "4",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9345 6789",
+        "special_needs": "Deslocamento de quadril",
+        "status": "on"
+    },
+    {
+        "id": "def1234567890abcdef1234567890abcdef1234",
+        "name": "Mackenzie",
+        "age": "8",
+        "parents": "Bandit Heeler e Chilli Heeler",
+        "phone_number": "48 9654 3210",
+        "special_needs": "Problemas de visão",
+        "status": "on"
+    },
+    {
+        "id": "ghi234567890abcdef1234567890abcdef5678",
+        "name": "Snickers",
+        "age": "2",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9512 3456",
+        "special_needs": "Nenhuma",
+        "status": "on"
+    },
+    {
+        "id": "jkl345678901abcdef1234567890abcdefabcd",
+        "name": "Trixie",
+        "age": "3",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9786 5432",
+        "special_needs": "Hipotireoidismo",
+        "status": "on"
+    },
+    {
+        "id": "mno456789012abcdef1234567890abcdef1234",
+        "name": "Max",
+        "age": "5",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9642 1357",
+        "special_needs": "Nenhuma",
+        "status": "on"
+    },
+    {
+        "id": "pqr567890123abcdef1234567890abcdef5678",
+        "name": "Bella",
+        "age": "9",
+        "parents": "Desconhecidos",
+        "phone_number": "48 9754 3210",
+        "special_needs": "Problemas cardíacos",
+        "status": "on"
     }
 ]
