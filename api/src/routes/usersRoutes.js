@@ -53,7 +53,7 @@ function escreve(dadosEcrita) {
  * @swagger
  * tags:
  *   name: Users
- *   description: API para gerenciamento de usuários
+ *   description: "API para gerenciamento de usuários | Desenvolvido por: **Gabriel Gonçalves Flôr**"
  */
 
 /**
@@ -92,7 +92,7 @@ router.get('/', (req, res) => {
  *         description: ID do usuário
  *     responses:
  *       200:
- *         description: Usuário encontrado
+ *         description: Usuário encontrado com todas as informações
  *         content:
  *           application/json:
  *             schema:
@@ -103,12 +103,56 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     loadUsers();
     const id = req.params.id;
-    const user = usersDB.find(user => user.id === id );
+    const user = usersDB.find(user => user.id === id);
 
     if (user) {
-        res.json(user);
+        res.json(user);  // Retorna todas as informações do usuário
     } else {
         res.status(404).send('Usuário não encontrado');
+    }
+});
+
+/**
+ * @swagger
+ * /user/name/{name}:
+ *   get:
+ *     summary: Retorna um usuário pelo nome, mesmo que parcial e sem diferenciar maiúsculas e minúsculas
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Parte do nome do usuário
+ *     responses:
+ *       200:
+ *         description: Lista completa de usuários encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       404:
+ *         description: Nenhum usuário encontrado
+ */
+router.get('/name/:name', (req, res) => {
+    loadUsers();
+    const name = req.params.name.toLowerCase();
+    
+    function normalize(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    }
+
+    const users = usersDB.filter(user => 
+        normalize(user.name.toLowerCase()).includes(normalize(name))
+    );
+
+    if (users.length > 0) {
+        res.json(users);  // Retorna a lista completa de usuários encontrados
+    } else {
+        res.status(404).send('Nenhum usuário encontrado');
     }
 });
 
