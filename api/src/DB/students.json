@@ -79,5 +79,14 @@
         "phone_number": "48 9754 3210",
         "special_needs": "Problemas cardíacos",
         "status": "on"
+    },
+    {
+        "id": "stu678901234abcdef1234567890abcdef6789",
+        "name": "Charlie",
+        "age": "1",
+        "parents": "Desconhecidos",
+        "phone_number": "48 8765 4321",
+        "special_needs": "Desenvolvimento atrasado",
+        "status": "on"
     }
 ]
