@@ -6,5 +6,77 @@
     "contact": "wb.fisio@gmail",
     "phone_number": "48 9696 5858",
     "status": "on"
-  }
+  },
+  {
+    "id": "1a2b3c4d-5e67-8f90-abcd-ef1234567890",
+    "name": "Lucas Almeida",
+    "specialty": "Médico",
+    "contact": "lucas.almeida@gmail.com",
+    "phone_number": "48 9876 5432",
+    "status": "on"
+},
+{
+    "id": "2b3c4d5e-6f78-90ab-cdef-1234567890ab",
+    "name": "Mariana Silva",
+    "specialty": "Nutricionista",
+    "contact": "mariana.silva@gmail.com",
+    "phone_number": "48 9988 7766",
+    "status": "off"
+},
+{
+    "id": "3c4d5e6f-7g89-01ab-cdef-234567890abc",
+    "name": "Pedro Costa",
+    "specialty": "Psicólogo",
+    "contact": "pedro.costa@gmail.com",
+    "phone_number": "48 9555 1234",
+    "status": "on"
+},
+{
+    "id": "4d5e6f7g-8h90-12ab-cdef-345678901bcd",
+    "name": "Ana Pereira",
+    "specialty": "Fonoaudióloga",
+    "contact": "ana.pereira@gmail.com",
+    "phone_number": "48 9444 5678",
+    "status": "off"
+},
+{
+    "id": "5e6f7g8h-9i01-23ab-cdef-456789012cde",
+    "name": "Rafael Gomes",
+    "specialty": "Dentista",
+    "contact": "rafael.gomes@gmail.com",
+    "phone_number": "48 9333 4455",
+    "status": "on"
+},
+{
+    "id": "6f7g8h9i-0j12-34ab-cdef-567890123def",
+    "name": "Sofia Lima",
+    "specialty": "Terapeuta Ocupacional",
+    "contact": "sofia.lima@gmail.com",
+    "phone_number": "48 9222 3344",
+    "status": "off"
+},
+{
+    "id": "7g8h9i0j-1k23-45ab-cdef-678901234efg",
+    "name": "Carlos Souza",
+    "specialty": "Educador Físico",
+    "contact": "carlos.souza@gmail.com",
+    "phone_number": "48 9111 2233",
+    "status": "on"
+},
+{
+    "id": "8h9i0j1k-2l34-56ab-cdef-789012345fgh",
+    "name": "Julia Martins",
+    "specialty": "Farmacêutica",
+    "contact": "julia.martins@gmail.com",
+    "phone_number": "48 9000 1122",
+    "status": "on"
+},
+{
+    "id": "9i0j1k2l-3m45-67ab-cdef-890123456hij",
+    "name": "Felipe Rocha",
+    "specialty": "Veterinário",
+    "contact": "felipe.rocha@gmail.com",
+    "phone_number": "48 8899 4455",
+    "status": "off"
+}
 ]
