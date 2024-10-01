@@ -56,11 +56,50 @@ function writeStudents(data) {
  *   description: API para gerenciamento de alunos
  */
 
+/**
+ * @swagger
+ * /student:
+ *   get:
+ *     summary: Retorna a lista de todos os alunos
+ *     tags: [Students]
+ *     responses:
+ *       200:
+ *         description: A lista de alunos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Student'
+ */
 router.get('/', (req, res) => {
     loadStudents();
     res.json(studentsDB);
 });
 
+/**
+ * @swagger
+ * /student/{id}:
+ *   get:
+ *     summary: Retorna um aluno pelo ID
+ *     tags: [Students]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do aluno
+ *     responses:
+ *       200:
+ *         description: Aluno encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Student'
+ *       404:
+ *         description: Aluno não encontrado
+ */
 router.get('/:id', (req, res) => {
     loadStudents();
     const student = studentsDB.find(s => s.id === req.params.id);
@@ -68,6 +107,22 @@ router.get('/:id', (req, res) => {
     res.json(student);
 });
 
+/**
+ * @swagger
+ * /student:
+ *   post:
+ *     summary: Adiciona um novo aluno
+ *     tags: [Students]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Student'
+ *     responses:
+ *       201:
+ *         description: Aluno adicionado com sucesso
+ */
 router.post('/', (req, res) => {
     loadStudents();
     const student = req.body;
@@ -78,6 +133,31 @@ router.post('/', (req, res) => {
     res.status(201).json({ message: 'Aluno adicionado com sucesso', student: studentWithId });
 });
 
+/**
+ * @swagger
+ * /student/{id}:
+ *   put:
+ *     summary: Atualiza um aluno pelo ID
+ *     tags: [Students]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do aluno
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Student'
+ *     responses:
+ *       200:
+ *         description: Aluno atualizado com sucesso
+ *       404:
+ *         description: Aluno não encontrado
+ */
 router.put('/:id', (req, res) => {
     loadStudents();
     const index = studentsDB.findIndex(s => s.id === req.params.id);
@@ -88,6 +168,25 @@ router.put('/:id', (req, res) => {
     res.json({ message: 'Aluno atualizado com sucesso', student: studentsDB[index] });
 });
 
+/**
+ * @swagger
+ * /student/{id}:
+ *   delete:
+ *     summary: Remove um aluno pelo ID
+ *     tags: [Students]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do aluno
+ *     responses:
+ *       204:
+ *         description: Aluno removido com sucesso
+ *       404:
+ *         description: Aluno não encontrado
+ */
 router.delete('/:id', (req, res) => {
     loadStudents();
     const index = studentsDB.findIndex(s => s.id === req.params.id);
