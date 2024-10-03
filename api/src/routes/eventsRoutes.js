@@ -61,7 +61,7 @@ function escreve(dadosEcrita) {
  * @swagger
  * tags:
  *   name: Events
- *   description: API de controle de eventos
+ *   description: API de controle de eventos | Desenvolvido por: **Rafael Martignago Palmito**"
  */
 
 /**
@@ -201,14 +201,19 @@ router.post('/adicionar', (req, res) => {
  */
 router.put('/:id', (req, res) => {
     loadAlunos();
-    const id = req.params.id;
-    const eventoNovo = req.body;
+    const id = req.params.id; 
+    const eventoNovo = req.body; 
     const eventoIndex = eventDB.findIndex(evento => evento.id === id);
 
+    if (eventoIndex === -1) {
+        return res.status(404).send('Evento não encontrado'); 
+    }
+
     eventDB[eventoIndex] = { ...eventDB[eventoIndex], ...eventoNovo };
-    escreve(eventDB);
-    res.json(eventDB[eventoIndex]);
+    escreve(eventDB); 
+    res.json(eventDB[eventoIndex]); 
 });
+
 
 /**
  * @swagger
@@ -229,11 +234,17 @@ router.put('/:id', (req, res) => {
  */
 router.delete('/:id', (req, res) => {
     loadAlunos();
-    const id = req.params.id;
-    const appointIndex = eventDB.findIndex(evento => evento.id === id);
-    eventDB.splice(appointIndex, 1);
-    escreve(eventDB);
-    res.status(200).send('evento removido com sucesso');
+    const id = req.params.id; 
+    const appointIndex = eventDB.findIndex(evento => evento.id === id); 
+
+    if (appointIndex === -1) {
+        return res.status(404).send('Evento não encontrado'); 
+    }
+
+    eventDB.splice(appointIndex, 1); 
+    escreve(eventDB); 
+    res.status(200).send('Evento removido com sucesso');
 });
+
 
 module.exports = router;
