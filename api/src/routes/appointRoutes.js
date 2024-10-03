@@ -70,7 +70,7 @@ function escreve(dadosEcrita) {
  * @swagger
  * tags:
  *   name: Appointments
- *   description: API de controle de agendamentos
+ *   description: API de controle de agendamentos | Desenvolvido por: **Rafael Martignago Palmito**"
  */
 
 /**
@@ -211,15 +211,21 @@ router.post('/adicionar', (req, res) => {
  *               $ref: '#/components/schemas/Appointment'
  */
 router.put('/:id', (req, res) => {
-    loadAlunos();
-    const id = req.params.id;
-    const appointNovo = req.body;
-    const appointIndex = appointDB.findIndex(appoint => appoint.id === id);
+    loadAlunos(); 
+    const id = req.params.id; 
+    const appointNovo = req.body; 
+    const appointIndex = appointDB.findIndex(appoint => appoint.id === id); 
+
+    if (appointIndex === -1) {
+        return res.status(404).send('Dados não encontrados'); 
+    }
 
     appointDB[appointIndex] = { ...appointDB[appointIndex], ...appointNovo };
-    escreve(appointDB);
-    res.json(appointDB[appointIndex]);
+    escreve(appointDB); 
+
+    res.json(appointDB[appointIndex]); 
 });
+
 
 /**
  * @swagger
@@ -239,12 +245,18 @@ router.put('/:id', (req, res) => {
  *         description: Agendamento removido com sucesso
  */
 router.delete('/:id', (req, res) => {
-    loadAlunos();
-    const id = req.params.id;
-    const appointIndex = appointDB.findIndex(appoint => appoint.id === id);
+    loadAlunos(); 
+    const id = req.params.id; 
+    const appointIndex = appointDB.findIndex(appoint => appoint.id === id); 
+
+    if (appointIndex === -1) {
+        return res.status(404).send('Dados não encontrados'); 
+    }
+
     appointDB.splice(appointIndex, 1);
-    escreve(appointDB);
-    res.status(200).send('dados removidos com sucesso');
+    escreve(appointDB); 
+    res.status(200).send('Dados removidos com sucesso'); 
 });
+
 
 module.exports = router;
