@@ -31,29 +31,44 @@ function writeTeachers(data) {
  *       type: object
  *       required:
  *         - id
- *         - name
- *         - subject
+ *         - specialty
+ *         - comments
+ *         - date
+ *         - student
+ *         - professional
  *       properties:
  *         id:
  *           type: string
  *           description: ID gerado automaticamente para o professor
- *         name:
+ *         specialty:
  *           type: string
- *           description: Nome do professor
- *         subject:
+ *           description: Especialidade do professor
+ *         comments:
  *           type: string
- *           description: Disciplina que o professor ensina
+ *           description: Comentários sobre a sessão
+ *         date:
+ *           type: string
+ *           description: Data da sessão
+ *         student:
+ *           type: string
+ *           description: Nome do aluno
+ *         professional:
+ *           type: string
+ *           description: Nome do profissional
  *       example:
- *         id: "1a2b3c4d"
- *         name: "Maria Oliveira"
- *         subject: "Matemática"
+ *         id: "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd"
+ *         specialty: "Fisioterapeuta"
+ *         comments: "Realizar sessão"
+ *         date: "2023-08-15 16:00:00"
+ *         student: "Bingo Heeler"
+ *         professional: "Winton Blake"
  */
 
 /**
  * @swagger
  * tags:
  *   name: Teachers
- *   description: API para gerenciamento de professores
+ *   description: "API para gerenciamento de professores | Desenvolvido por: **Bruno Souza**"
  */
 
 /**
@@ -75,6 +90,51 @@ function writeTeachers(data) {
 router.get('/', (req, res) => {
     loadTeachers();
     res.json(teachersDB);
+});
+
+/**
+ * @swagger
+ * /teacher/name/{name}:
+ *   get:
+ *     summary: Retorna professores pelo nome
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nome do professor
+ *     responses:
+ *       200:
+ *         description: Lista de professores encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Teacher'
+ *       404:
+ *         description: Nenhum professor encontrado
+ */
+router.get('/name/:name', (req, res) => {
+    loadTeachers();
+    const name = req.params.name.toLowerCase();
+
+    function normalize(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    }
+
+    const matchingTeachers = teachersDB.filter(teacher =>
+        normalize(teacher.student.toLowerCase()).includes(normalize(name)) || 
+        normalize(teacher.professional.toLowerCase()).includes(normalize(name))
+    );
+
+    if (matchingTeachers.length > 0) {
+        res.json(matchingTeachers);
+    } else {
+        res.status(404).send('Nenhum professor encontrado com esse nome.');
+    }
 });
 
 /**
@@ -125,12 +185,18 @@ router.get('/:id', (req, res) => {
  */
 router.post('/', (req, res) => {
     loadTeachers();
-    const teacher = req.body;
-    const id = uuidv4();
-    const teacherWithId = { id, ...teacher };
-    teachersDB.push(teacherWithId);
+
+    const { specialty, comments, date, student, professional } = req.body;
+
+    if (!specialty || !comments || !date || !student || !professional) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    }
+
+    const id = uuidv4(); // Gerar ID automaticamente
+    const newTeacher = { id, specialty, comments, date, student, professional };
+    teachersDB.push(newTeacher);
     writeTeachers(teachersDB);
-    res.status(201).json({ message: 'Professor adicionado com sucesso', teacher: teacherWithId });
+    res.status(201).json({ message: 'Professor adicionado com sucesso', teacher: newTeacher });
 });
 
 /**
@@ -163,7 +229,13 @@ router.put('/:id', (req, res) => {
     const index = teachersDB.findIndex(t => t.id === req.params.id);
     if (index === -1) return res.status(404).send('Professor não encontrado');
 
-    teachersDB[index] = { ...teachersDB[index], ...req.body };
+    const { specialty, comments, date, student, professional } = req.body;
+
+    if (!specialty || !comments || !date || !student || !professional) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    }
+
+    teachersDB[index] = { id: req.params.id, specialty, comments, date, student, professional };
     writeTeachers(teachersDB);
     res.json({ message: 'Professor atualizado com sucesso', teacher: teachersDB[index] });
 });

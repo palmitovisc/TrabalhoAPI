@@ -5,7 +5,7 @@ const prof = require('./professionalsRoutes');
 const user = require('./usersRoutes');
 const event = require('./eventsRoutes');
 const teacher = require('./teachersRoutes');
-const student = require('/studentsRoutes');
+const student = require('./studentsRoutes');
 const { v4: uuidv4 } = require('uuid');
 
 
