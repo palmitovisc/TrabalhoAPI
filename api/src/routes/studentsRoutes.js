@@ -27,27 +27,47 @@ function writeStudents(data) {
  * @swagger
  * components:
  *   schemas:
- *     Student:
- *       type: object
- *       required:
- *         - id
- *         - name
- *         - grade
- *       properties:
- *         id:
- *           type: string
- *           description: ID gerado automaticamente para o aluno
- *         name:
- *           type: string
- *           description: Nome do aluno
- *         grade:
- *           type: string
- *           description: Série do aluno
- *       example:
- *         id: "1a2b3c4d"
- *         name: "João Silva"
- *         grade: "9th grade"
- */
+     Student:
+       type: object
+       required:
+         - id
+         - name
+         - age
+         - parents
+         - phone_number
+         - special_needs
+         - status
+       properties:
+         id:
+           type: string
+           description: ID único do aluno
+         name:
+           type: string
+           description: Nome do aluno
+         age:
+           type: string
+           description: Idade do aluno
+         parents:
+           type: string
+           description: Pais do aluno
+         phone_number:
+           type: string
+           description: Número de telefone do aluno
+         special_needs:
+           type: string
+           description: Necessidades especiais do aluno
+         status:
+           type: string
+           description: Status do aluno (por exemplo, "on" ou "off")
+       example:
+         id: "eab1234567890abcdef1234567890abcdef1234"
+         name: "Bluey Heeler"
+         age: "5"
+         parents: "Bandit Heeler e Chilli Heeler"
+         phone_number: "48 9876 5432"
+         special_needs: "Nenhuma"
+         status: "on"
+*/
 
 /**
  * @swagger
@@ -109,6 +129,50 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
+ * /Student/name/{name}:
+ *   get:
+ *     summary: Retorna um aluno pelo nome, mesmo que parcial e sem diferenciar maiúsculas e minúsculas
+ *     tags: [Student]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Parte do nome do aluno
+ *     responses:
+ *       200:
+ *         description: Lista completa de alunos encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Student'
+ *       404:
+ *         description: Nenhum usuário encontrado
+ */
+router.get('/name/:name', (req, res) => {
+    loadStudents();
+    const name = req.params.name.toLowerCase();
+    
+    function normalize(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    }
+
+    const students = studentsDB.filter(student => 
+        normalize(student.name.toLowerCase()).includes(normalize(name))
+    );
+
+    if (students.length > 0) {
+        res.json(students);
+    } else {
+        res.status(404).send('Nenhum aluno encontrado');
+    }
+});
+
+/**
+ * @swagger
  * /student:
  *   post:
  *     summary: Adiciona um novo aluno
@@ -123,6 +187,8 @@ router.get('/:id', (req, res) => {
  *       201:
  *         description: Aluno adicionado com sucesso
  */
+
+
 router.post('/', (req, res) => {
     loadStudents();
     const student = req.body;
