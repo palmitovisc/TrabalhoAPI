@@ -25,7 +25,6 @@ function escreve(dadosEcrita) {
     }
 }
 
-// Swagger definition
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -40,13 +39,12 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['professionalsRoutes.js'], // Path to the API docs
+    apis: ['professionalsRoutes.js'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Suas rotas e documentação Swagger
 /**
  * @swagger
  * components:
