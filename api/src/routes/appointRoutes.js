@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 let appointDB = require('../DB/appointments.json');
 
-function loadAlunos() {
+function loadAppointments() {
     try {
         appointDB = JSON.parse(fs.readFileSync('./src/DB/appointments.json', 'utf8'));
         console.log('Dados carregados diretamente do arquivo.');
@@ -14,7 +14,7 @@ function loadAlunos() {
     }
 }
 
-function escreve(dadosEcrita) {
+function saveData(dadosEcrita) {
     try {
         fs.writeFileSync('./src/DB/appointments.json', JSON.stringify(dadosEcrita, null, 2), 'utf8');
         console.log('Dados escritos com sucesso');
@@ -60,11 +60,10 @@ function escreve(dadosEcrita) {
  *         id: "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd"
  *         specialty: "Fisioterapeuta"
  *         comments: "Realizar sessão"
- *         date: "2023-08-15 16:00:00"
+ *         date: "2023-08-15T16:00:00"
  *         student: "Bingo Heeler"
  *         professional: "Winton Blake"
  */
-
 
 /**
  * @swagger
@@ -90,12 +89,8 @@ function escreve(dadosEcrita) {
  *                 $ref: '#/components/schemas/Appointment'
  */
 router.get('/', (req, res) => {
-    loadAlunos();
-    try {
-        res.json(appointDB);
-    } catch (err) {
-        console.error("Erro ao enviar dados.");
-    }
+    loadAppointments();
+    res.json(appointDB);
 });
 
 /**
@@ -131,27 +126,25 @@ router.get('/', (req, res) => {
  *       400:
  *         description: Datas inseridas incorretamente
  */
-router.get('/data/:data1?/:data2?', (req, res) => {
-    loadAlunos();
+router.get('/data/:data1/:data2', (req, res) => {
+    loadAppointments();
 
-    const datan1 = req.params.data1;
-    const datan2 = req.params.data2;
+    const { data1, data2 } = req.params;
 
-    if (!datan1 || !datan2) {
+    if (!data1 || !data2) {
         return res.status(400).send('Datas inseridas erradas');
     }
 
-    const date1 = new Date(datan1);
-    let date2 = new Date(datan2);
-
+    const date1 = new Date(data1);
+    const date2 = new Date(data2);
     date2.setHours(23, 59, 59, 999); 
-    
-    const dataFiltrada = appointDB.filter(item => {
+
+    const filteredData = appointDB.filter(item => {
         const itemDate = new Date(item.date);
         return itemDate >= date1 && itemDate <= date2;
     });
 
-    res.json(dataFiltrada);
+    res.json(filteredData);
 });
 
 /**
@@ -171,16 +164,15 @@ router.get('/data/:data1?/:data2?', (req, res) => {
  *         description: Agendamento adicionado com sucesso
  */
 router.post('/adicionar', (req, res) => {
-    loadAlunos();
+    loadAppointments();
     const appoint = req.body;
-    const id = uuidv4();
     const appointComId = {
-        id: id,
+        id: uuidv4(),
         ...appoint
     };
     appointDB.push(appointComId);
-    escreve(appointDB);
-    res.status(201).send('novo agendamento adicionado');
+    saveData(appointDB);
+    res.status(201).send('Novo agendamento adicionado');
 });
 
 /**
@@ -209,18 +201,21 @@ router.post('/adicionar', (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Appointment'
+ *       404:
+ *         description: Agendamento não encontrado
  */
 router.put('/:id', (req, res) => {
-    loadAlunos();
+    loadAppointments();
     const id = req.params.id;
     const appointNovo = req.body;
     const appointIndex = appointDB.findIndex(appoint => appoint.id === id);
+
     if (appointIndex === -1) {
-        return res.status(404).send('Evento não encontrado'); 
+        return res.status(404).send('Agendamento não encontrado');
     }
 
     appointDB[appointIndex] = { ...appointDB[appointIndex], ...appointNovo };
-    escreve(appointDB);
+    saveData(appointDB);
     res.json(appointDB[appointIndex]);
 });
 
@@ -240,17 +235,21 @@ router.put('/:id', (req, res) => {
  *     responses:
  *       200:
  *         description: Agendamento removido com sucesso
+ *       404:
+ *         description: Agendamento não encontrado
  */
 router.delete('/:id', (req, res) => {
-    loadAlunos();
+    loadAppointments();
     const id = req.params.id;
     const appointIndex = appointDB.findIndex(appoint => appoint.id === id);
+
     if (appointIndex === -1) {
-        return res.status(404).send('Evento não encontrado'); 
+        return res.status(404).send('Agendamento não encontrado');
     }
+
     appointDB.splice(appointIndex, 1);
-    escreve(appointDB);
-    res.status(200).send('dados removidos com sucesso');
+    saveData(appointDB);
+    res.status(200).send('Agendamento removido com sucesso');
 });
 
 module.exports = router;
