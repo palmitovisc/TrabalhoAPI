@@ -124,6 +124,50 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
+ * /teacher/name/{name}:
+ *   get:
+ *     summary: Retorna um professor pelo nome, mesmo que parcial e sem diferenciar maiúsculas e minúsculas
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Parte do nome do professor
+ *     responses:
+ *       200:
+ *         description: Lista completa de professores encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Teacher'
+ *       404:
+ *         description: Nenhum professor encontrado
+ */
+router.get('/name/:name', (req, res) => {
+    loadTeachers();
+    const name = req.params.name.toLowerCase();
+
+    function normalize(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    }
+
+    const teachers = teachersDB.filter(teacher => 
+        normalize(teacher.name.toLowerCase()).includes(normalize(name))
+    );
+
+    if (teachers.length > 0) {
+        res.json(teachers);  // Retorna a lista completa de professores encontrados
+    } else {
+        res.status(404).send('Nenhum professor encontrado');
+    }
+});
+
+/**
+ * @swagger
  * /teacher:
  *   post:
  *     summary: Adiciona um novo professor
