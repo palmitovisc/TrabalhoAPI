@@ -10,7 +10,7 @@ function loadStudents() {
         studentsDB = JSON.parse(fs.readFileSync('./src/DB/students.json', 'utf8'));
         console.log('Dados dos alunos carregados diretamente do arquivo.');
     } catch (err) {
-        console.log('Erro ao ler o arquivo', err);
+        console.error('Erro ao ler o arquivo', err);
     }
 }
 
@@ -27,47 +27,47 @@ function writeStudents(data) {
  * @swagger
  * components:
  *   schemas:
-     Student:
-       type: object
-       required:
-         - id
-         - name
-         - age
-         - parents
-         - phone_number
-         - special_needs
-         - status
-       properties:
-         id:
-           type: string
-           description: ID único do aluno
-         name:
-           type: string
-           description: Nome do aluno
-         age:
-           type: string
-           description: Idade do aluno
-         parents:
-           type: string
-           description: Pais do aluno
-         phone_number:
-           type: string
-           description: Número de telefone do aluno
-         special_needs:
-           type: string
-           description: Necessidades especiais do aluno
-         status:
-           type: string
-           description: Status do aluno (por exemplo, "on" ou "off")
-       example:
-         id: "eab1234567890abcdef1234567890abcdef1234"
-         name: "Bluey Heeler"
-         age: "5"
-         parents: "Bandit Heeler e Chilli Heeler"
-         phone_number: "48 9876 5432"
-         special_needs: "Nenhuma"
-         status: "on"
-*/
+ *     Student:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - age
+ *         - parents
+ *         - phone_number
+ *         - special_needs
+ *         - status
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID único do aluno
+ *         name:
+ *           type: string
+ *           description: Nome do aluno
+ *         age:
+ *           type: string
+ *           description: Idade do aluno
+ *         parents:
+ *           type: string
+ *           description: Pais do aluno
+ *         phone_number:
+ *           type: string
+ *           description: Número de telefone do aluno
+ *         special_needs:
+ *           type: string
+ *           description: Necessidades especiais do aluno
+ *         status:
+ *           type: string
+ *           description: Status do aluno (por exemplo, "on" ou "off")
+ *       example:
+ *         id: "eab1234567890abcdef1234567890abcdef1234"
+ *         name: "Bluey Heeler"
+ *         age: "5"
+ *         parents: "Bandit Heeler e Chilli Heeler"
+ *         phone_number: "48 9876 5432"
+ *         special_needs: "Nenhuma"
+ *         status: "on"
+ */
 
 /**
  * @swagger
@@ -129,10 +129,10 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
- * /Student/name/{name}:
+ * /student/name/{name}:
  *   get:
  *     summary: Retorna um aluno pelo nome, mesmo que parcial e sem diferenciar maiúsculas e minúsculas
- *     tags: [Student]
+ *     tags: [Students]
  *     parameters:
  *       - in: path
  *         name: name
@@ -150,14 +150,14 @@ router.get('/:id', (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Student'
  *       404:
- *         description: Nenhum usuário encontrado
+ *         description: Nenhum aluno encontrado
  */
 router.get('/name/:name', (req, res) => {
     loadStudents();
-    const name = req.params.name.toLowerCase();
+    const name = req.params.name.toLowerCase().trim();
     
     function normalize(str) {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
     }
 
     const students = studentsDB.filter(student => 
@@ -187,8 +187,6 @@ router.get('/name/:name', (req, res) => {
  *       201:
  *         description: Aluno adicionado com sucesso
  */
-
-
 router.post('/', (req, res) => {
     loadStudents();
     const student = req.body;
