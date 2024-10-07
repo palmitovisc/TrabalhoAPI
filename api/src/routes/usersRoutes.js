@@ -33,6 +33,8 @@ function escreve(dadosEcrita) {
  *         - id
  *         - name
  *         - email
+ *         - age
+ *         - address
  *       properties:
  *         id:
  *           type: string
@@ -43,10 +45,18 @@ function escreve(dadosEcrita) {
  *         email:
  *           type: string
  *           description: Email do usuário
+ *         age:
+ *           type: integer
+ *           description: Idade do usuário
+ *         address:
+ *           type: string
+ *           description: Endereço do usuário
  *       example:
  *         id: "1a2b3c4d"
  *         name: "João Silva"
  *         email: "joao.silva@example.com"
+ *         age: 30
+ *         address: "Rua das Flores, 123"
  */
 
 /**
