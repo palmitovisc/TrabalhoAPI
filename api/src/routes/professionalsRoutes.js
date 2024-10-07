@@ -76,7 +76,8 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *           description: Número de telefone do profissional
  *         status:
  *           type: string
- *           description: Status do profissional (ex.: ativo, inativo)
+ *           description: |
+ *             Status do profissional (ex.: ativo, inativo)
  *       example:
  *         id: "4bae2b2c-4e71-4e12-be4c-eb185c2756fa"
  *         name: "João Silva"
@@ -90,7 +91,7 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * @swagger
  * tags:
  *   name: Professionals
- *   description: API de controle de profissionais
+ *   description: "API de controle de profissionais | Desenvolvido por: **Élita Pereira dos Santos**"
  */
 
 /**
@@ -271,7 +272,6 @@ router.put('/:id', (req, res) => {
     const profissionalIndex = profDB.findIndex(profissional => profissional.id === id);
 
     if (profissionalIndex !== -1) {
-        // Atualiza apenas os campos que foram enviados na requisição
         profDB[profissionalIndex] = { ...profDB[profissionalIndex], ...profissionalNovo };
         escreve(profDB);
         res.json(profDB[profissionalIndex]);
@@ -305,7 +305,7 @@ router.delete('/:id', (req, res) => {
     if (profissionalIndex !== -1) {
         profDB.splice(profissionalIndex, 1);
         escreve(profDB);
-        res.status(200).send('profissional removido com sucesso');
+        res.status(200).send('Profissional removido com sucesso');
     } else {
         res.status(404).send("Profissional não encontrado");
     }
