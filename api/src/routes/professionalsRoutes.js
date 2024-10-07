@@ -137,6 +137,79 @@ router.post('/adicionar', (req, res) => {
 /**
  * @swagger
  * /prof/{id}:
+ *   get:
+ *     summary: Retorna um profissional pelo ID
+ *     tags: [Professionals]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do profissional
+ *     responses:
+ *       200:
+ *         description: Profissional encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Professional'
+ *       404:
+ *         description: Profissional não encontrado
+ */
+router.get('/:id', (req, res) => {
+    loadProfissionais();
+    const id = req.params.id;
+    const profissional = profDB.find(prof => prof.id === id);
+
+    if (profissional) {
+        res.json(profissional);
+    } else {
+        res.status(404).send("Profissional não encontrado");
+    }
+});
+
+/**
+ * @swagger
+ * /prof/nome/{nome}:
+ *   get:
+ *     summary: Retorna profissionais pelo nome
+ *     tags: [Professionals]
+ *     parameters:
+ *       - in: path
+ *         name: nome
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nome do profissional
+ *     responses:
+ *       200:
+ *         description: Profissionais encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Professional'
+ *       404:
+ *         description: Profissional não encontrado
+ */
+router.get('/nome/:nome', (req, res) => {
+    loadProfissionais();
+    const nome = req.params.nome.toLowerCase();
+    const profissionais = profDB.filter(prof => prof.name.toLowerCase().includes(nome));
+
+    if (profissionais.length > 0) {
+        res.json(profissionais);
+    } else {
+        res.status(404).send("Profissional não encontrado");
+    }
+});
+
+
+/**
+ * @swagger
+ * /prof/{id}:
  *   put:
  *     summary: Atualiza um profissional pelo ID
  *     tags: [Professionals]
