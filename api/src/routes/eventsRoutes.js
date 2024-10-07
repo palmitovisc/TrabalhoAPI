@@ -5,9 +5,8 @@ const { v4: uuidv4 } = require('uuid');
 
 let eventDB = require('../DB/events.json');
 
-function loadAlunos() {
+function loadEvents() {
     try {
-       
         eventDB = JSON.parse(fs.readFileSync('./src/DB/events.json', 'utf8'));
         console.log('Dados carregados diretamente do arquivo.');
     } catch (err) {
@@ -15,8 +14,7 @@ function loadAlunos() {
     }
 }
 
-
-function escreve(dadosEcrita) {
+function saveData(dadosEcrita) {
     try {
         fs.writeFileSync('./src/DB/events.json', JSON.stringify(dadosEcrita, null, 2), 'utf8');
         console.log('Dados escritos com sucesso');
@@ -81,12 +79,8 @@ function escreve(dadosEcrita) {
  *                 $ref: '#/components/schemas/Event'
  */
 router.get('/', (req, res) => {
-    loadAlunos();
-    try {
-        res.json(eventDB);
-    } catch (err) {
-        console.error("Erro ao enviar dados.");
-    }
+    loadEvents();
+    res.json(eventDB);
 });
 
 /**
@@ -122,25 +116,24 @@ router.get('/', (req, res) => {
  *       400:
  *         description: Datas inseridas incorretamente
  */
-router.get('/data/:data1?/:data2?', (req, res) => {
-    loadAlunos();
+router.get('/data/:data1/:data2', (req, res) => {
+    loadEvents();
 
-    const datan1 = req.params.data1;
-    const datan2 = req.params.data2;
+    const { data1, data2 } = req.params;
 
-    if (!datan1 || !datan2) {
+    if (!data1 || !data2) {
         return res.status(400).send('Datas inseridas erradas');
     }
 
-    const date1 = new Date(datan1);
-    const date2 = new Date(datan2);
+    const date1 = new Date(data1);
+    const date2 = new Date(data2);
 
-    const dataFiltrada = eventDB.filter(item => {
+    const filteredData = eventDB.filter(item => {
         const itemDate = new Date(item.date);
         return itemDate >= date1 && itemDate <= date2;
     });
 
-    res.json(dataFiltrada);
+    res.json(filteredData);
 });
 
 /**
@@ -160,16 +153,17 @@ router.get('/data/:data1?/:data2?', (req, res) => {
  *         description: Evento adicionado com sucesso
  */
 router.post('/adicionar', (req, res) => {
-    loadAlunos();
+    loadEvents();
     const evento = req.body;
-    const id = uuidv4();
+
     const eventoComId = {
-        id: id,
-        ...evento
+        id: uuidv4(),
+        ...evento,
     };
+
     eventDB.push(eventoComId);
-    escreve(eventDB);
-    res.status(201).send('novo evento adicionado');
+    saveData(eventDB);
+    res.status(201).send('Novo evento adicionado');
 });
 
 /**
@@ -198,19 +192,21 @@ router.post('/adicionar', (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Event'
+ *       404:
+ *         description: Evento não encontrado
  */
 router.put('/:id', (req, res) => {
-    loadAlunos();
+    loadEvents();
     const id = req.params.id;
     const eventoNovo = req.body;
-    const eventIndex = eventDB.findIndex(evento => evento.id === id); 
+    const eventIndex = eventDB.findIndex(evento => evento.id === id);
+
     if (eventIndex === -1) {
-        return res.status(404).send('Evento não encontrado'); 
+        return res.status(404).send('Evento não encontrado');
     }
-    eventDB.splice(eventIndex, 1);
 
     eventDB[eventIndex] = { ...eventDB[eventIndex], ...eventoNovo };
-    escreve(eventDB);
+    saveData(eventDB);
     res.json(eventDB[eventIndex]);
 });
 
@@ -230,17 +226,21 @@ router.put('/:id', (req, res) => {
  *     responses:
  *       200:
  *         description: Evento removido com sucesso
+ *       404:
+ *         description: Evento não encontrado
  */
 router.delete('/:id', (req, res) => {
-    loadAlunos();
+    loadEvents();
     const id = req.params.id;
     const eventoIndex = eventDB.findIndex(evento => evento.id === id);
+
     if (eventoIndex === -1) {
-        return res.status(404).send('Evento não encontrado'); 
+        return res.status(404).send('Evento não encontrado');
     }
+
     eventDB.splice(eventoIndex, 1);
-    escreve(eventDB);
-    res.status(200).send('evento removido com sucesso');
+    saveData(eventDB);
+    res.status(200).send('Evento removido com sucesso');
 });
 
 module.exports = router;
