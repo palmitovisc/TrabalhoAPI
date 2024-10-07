@@ -73,7 +73,7 @@ function writeStudents(data) {
  * @swagger
  * tags:
  *   name: Students
- *   description: API para gerenciamento de alunos | Desenvolvido por: **João Victor Borges Lourenço**"
+ *   description: "API para gerenciamento de alunos | Desenvolvido por: **João Victor Borges Lourenço**"
  */
 
 /**
