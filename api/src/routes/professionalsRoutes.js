@@ -54,7 +54,10 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *       required:
  *         - id
  *         - name
- *         - role
+ *         - specialty
+ *         - contact
+ *         - phone_number
+ *         - status
  *       properties:
  *         id:
  *           type: string
@@ -62,13 +65,25 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  *         name:
  *           type: string
  *           description: Nome do profissional
- *         role:
+ *         specialty:
  *           type: string
- *           description: Função do profissional
+ *           description: Especialidade do profissional
+ *         contact:
+ *           type: string
+ *           description: Informações de contato do profissional
+ *         phone_number:
+ *           type: string
+ *           description: Número de telefone do profissional
+ *         status:
+ *           type: string
+ *           description: Status do profissional (ex.: ativo, inativo)
  *       example:
- *         id: "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd"
+ *         id: "4bae2b2c-4e71-4e12-be4c-eb185c2756fa"
  *         name: "João Silva"
- *         role: "Desenvolvedor"
+ *         specialty: "Desenvolvedor"
+ *         contact: "joao.silva@example.com"
+ *         phone_number: "(11) 98765-4321"
+ *         status: "ativo"
  */
 
 /**
@@ -122,14 +137,19 @@ router.get('/', (req, res) => {
 router.post('/adicionar', (req, res) => {
     loadProfissionais();
     const profissional = req.body;
+
+    const requiredFields = ['name', 'specialty', 'contact', 'phone_number', 'status'];
+    const missingFields = requiredFields.filter(field => !profissional[field]);
+    
+    if (missingFields.length) {
+        return res.status(400).json({ error: `Campos obrigatórios ausentes: ${missingFields.join(', ')}` });
+    }
+
     const id = uuidv4();
-    const profissionalComId = {
-        id: id,
-        ...profissional
-    };
+    const profissionalComId = { id, ...profissional };
     profDB.push(profissionalComId);
     escreve(profDB);
-    res.status(201).send('novo profissional adicionado');
+    res.status(201).json(profissionalComId);
 });
 
 /**
@@ -204,7 +224,6 @@ router.get('/nome/:nome', (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /prof/{id}:
@@ -223,7 +242,18 @@ router.get('/nome/:nome', (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Professional'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               specialty:
+ *                 type: string
+ *               contact:
+ *                 type: string
+ *               phone_number:
+ *                 type: string
+ *               status:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Profissional atualizado com sucesso
@@ -232,13 +262,16 @@ router.get('/nome/:nome', (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Professional'
  */
+
 router.put('/:id', (req, res) => {
     loadProfissionais();
     const id = req.params.id;
     const profissionalNovo = req.body;
+
     const profissionalIndex = profDB.findIndex(profissional => profissional.id === id);
 
     if (profissionalIndex !== -1) {
+        // Atualiza apenas os campos que foram enviados na requisição
         profDB[profissionalIndex] = { ...profDB[profissionalIndex], ...profissionalNovo };
         escreve(profDB);
         res.json(profDB[profissionalIndex]);
