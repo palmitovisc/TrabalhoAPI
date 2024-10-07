@@ -112,11 +112,7 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  */
 router.get('/', (req, res) => {
     loadProfissionais();
-    try {
-        res.json(profDB);
-    } catch (err) {
-        console.error("Erro ao enviar dados.");
-    }
+    res.json(profDB);
 });
 
 /**
@@ -134,6 +130,8 @@ router.get('/', (req, res) => {
  *     responses:
  *       201:
  *         description: Profissional adicionado com sucesso
+ *       400:
+ *         description: Campos obrigatórios ausentes
  */
 router.post('/adicionar', (req, res) => {
     loadProfissionais();
@@ -178,8 +176,7 @@ router.post('/adicionar', (req, res) => {
  */
 router.get('/:id', (req, res) => {
     loadProfissionais();
-    const id = req.params.id;
-    const profissional = profDB.find(prof => prof.id === id);
+    const profissional = profDB.find(prof => prof.id === req.params.id);
 
     if (profissional) {
         res.json(profissional);
@@ -211,7 +208,7 @@ router.get('/:id', (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Professional'
  *       404:
- *         description: Profissional não encontrado
+ *         description: Nenhum profissional encontrado
  */
 router.get('/nome/:nome', (req, res) => {
     loadProfissionais();
@@ -221,7 +218,7 @@ router.get('/nome/:nome', (req, res) => {
     if (profissionais.length > 0) {
         res.json(profissionais);
     } else {
-        res.status(404).send("Profissional não encontrado");
+        res.status(404).send("Nenhum profissional encontrado");
     }
 });
 
@@ -262,8 +259,9 @@ router.get('/nome/:nome', (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Professional'
+ *       404:
+ *         description: Profissional não encontrado
  */
-
 router.put('/:id', (req, res) => {
     loadProfissionais();
     const id = req.params.id;
@@ -296,6 +294,8 @@ router.put('/:id', (req, res) => {
  *     responses:
  *       200:
  *         description: Profissional removido com sucesso
+ *       404:
+ *         description: Profissional não encontrado
  */
 router.delete('/:id', (req, res) => {
     loadProfissionais();
